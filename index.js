@@ -24,12 +24,25 @@ function getPost(id) {
         
         fetch(`https://dummyjson.com/posts/${id}`)
             .then((response) => response.json())
-            .then((data) => resolve(console.log(`Post ${data.id} by ${data.userId}; "${data.title}": ${data.body};`)))
-            .catch(reject);
+            .then((data) => {
+                fetch(`https://dummyjson.com/users/${data.userId}`)
+                .then(res => res.json())
+                .then(user => {
+                    const result = {
+                        ...data,
+                        user
+                    }
+                    resolve(result);
+                })
+                .catch(reject);
+            }).catch(reject);
+            
     });
 }
 
-// getPost(1);
+// getPost(1)
+//     .then(res => console.log(res))
+//     .catch(err => console.error(err));
 
 
 
